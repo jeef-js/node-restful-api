@@ -1,7 +1,12 @@
 const express = require('express');
-const app = express();
 const routes = require('./routes');
+const morgan = require('morgan');
 
+require('./database'); // Initialize the database
+
+const app = express();
+
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(routes);
 app.listen(3000);

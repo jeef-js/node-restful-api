@@ -1,6 +1,8 @@
+// This file is used to configure the sequelize instance
 const path = require('path');
 
 module.exports =  { 
-    config: path.resolve(__dirname, 'src', 'config', 'databaseConfig.js'),
-    'migrations-path': path.resolve(__dirname, 'src', 'database', 'migrations'),
+    config: path.resolve(__dirname, 'src', 'config', 'databaseConfig.js'), // Path to the database config file
+    'migrations-path': path.resolve(__dirname, 'src', 'database', 'migrations'), // Path to the migrations folder
+    // run yarn sequelize migration:create to create a new migration. You can also add the name of the migration to the command.
 };

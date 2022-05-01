@@ -1,3 +1,4 @@
+// run yarn sequelize db:create to create the database if it doesn't exist
 module.exports = {
     dialect: 'postgres', // DB Dialect example: mysql, sqlite, mssql
     host: 'localhost', // DB Host
