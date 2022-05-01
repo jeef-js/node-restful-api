@@ -1,0 +1,21 @@
+{
+  "name": "node-restful-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Jeef-js/node-restful-api.git",
+  "author": "Jeef-js <jeffersonthiago.ga@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16",
+    "sequelize-cli": "^6.4.1"
+  }
+}
