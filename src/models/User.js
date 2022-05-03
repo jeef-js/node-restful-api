@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcryptjs');
 
 // The model class represents a table in the database.
 class User extends Model {
@@ -10,6 +11,13 @@ class User extends Model {
             verified: DataTypes.BOOLEAN,
             // The fields id, createdAt and updatedAt are automatically created by sequelize.
         }, {
+            hooks: {
+                beforeSave: (user, options) => {
+                    // Hash the password before saving the user.
+                    const hashedPassword = bcrypt.hashSync(user.password_hash, 10);
+                    user.password_hash = hashedPassword;
+                },
+            },
             sequelize: connection,
         })
     }

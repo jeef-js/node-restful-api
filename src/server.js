@@ -6,7 +6,7 @@ require('./database'); // Initialize the database
 
 const app = express();
 
-app.use(morgan('dev'));
+app.use(morgan('dev')); // Log all requests
 app.use(express.json());
 app.use(routes);
 app.listen(3000);
