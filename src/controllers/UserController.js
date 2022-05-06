@@ -1,10 +1,11 @@
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const authConfig = require('../config/authConfig.json')
+const authConfig = require('../config/authConfig')
 
 module.exports = {
-  async store (req, res) { // Create a new user
+  async store (req, res) {
+    // Create a new user
     const { name, email, password } = req.body
 
     try {
@@ -20,9 +21,16 @@ module.exports = {
     }
   },
 
-  async index (req, res) { // List all users
+  async index (req, res) {
+    // List all users
     try {
       const users = await User.findAll()
+
+      users.map(user => {
+        // Remove the password from the user object.
+        user.password = undefined
+        return user
+      })
 
       return res.json(users)
     } catch (error) {
@@ -40,7 +48,8 @@ module.exports = {
     }
   },
 
-  async update (req, res) { // Update a specific user
+  async update (req, res) {
+    // Update a specific user
     const { name, email, password } = req.body
 
     try {
@@ -59,7 +68,8 @@ module.exports = {
     }
   },
 
-  async destroy (req, res) { // Delete a specific user
+  async destroy (req, res) {
+    // Delete a specific user
     const user = await User.findByPk(req.params.id)
 
     await user.destroy()
@@ -67,7 +77,8 @@ module.exports = {
     return res.json({ message: 'User deleted' })
   },
 
-  async login (req, res) { // Login a specific user
+  async login (req, res) {
+    // Login a specific user
     const { email, password } = req.body
 
     if (!email || !password) {
@@ -86,16 +97,19 @@ module.exports = {
       }
 
       if (!user.verified) {
-        return res.status(400).send({ message: 'Please verify your email address before logging in' }) // Send a message to the user that he needs to verify his email address
+        return res.status(400).send({ message: 'Please verify your email address before logging in' })
+        // Send a message to the user that he needs to verify his email address
       }
 
       if (!await bcrypt.compare(password, user.password)) {
         return res.status(400).json({ message: 'Invalid password' })
       }
 
-      user.password = undefined // Remove the password from the user object
+      user.password = undefined
+      // Remove the password from the user object
 
-      const token = jwt.sign({ id: user.id }, authConfig.secret, { expiresIn: '24h' }) // Create a token with the user object and a secret key
+      const token = jwt.sign({ id: user.id, name: user.name }, authConfig.secret, { expiresIn: '24h' })
+      // Create a token with the user object and a secret key
 
       return res.status(200).json({
         user,
@@ -106,7 +120,8 @@ module.exports = {
     }
   },
 
-  async verify (req, res) { // Verifies the email address of a specific user
+  async verify (req, res) {
+    // Verifies the email address of a specific user
     try {
       const user = await User.findByPk(req.params.id)
 
@@ -117,7 +132,8 @@ module.exports = {
       user.update({
         verified: true
       }, {
-        fields: ['verified'] // Only update the specified field
+        fields: ['verified']
+        // Only update the specified field
         // This option fix the problem of the password being rehashed when the user verifies his email address
       })
 
