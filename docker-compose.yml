@@ -1,3 +1,7 @@
+# Run docker-compose up -d to start the containers
+# If this is the first time running the containers, you will need to create the database, run the following commands on the app container:
+# yarn sequelize db:create and yarn sequelize db:migrate
+
 version: "3.8"
 
 volumes:
@@ -25,4 +29,4 @@ services:
       - .:/usr/app
     depends_on:
       - pg_database
-    command: sh -c "dockerize -wait tcp://postgres:5432 -timeout 300s -wait-retry-interval 30s && echo 'Postgres is ready'"
+    command: sh -c "yarn dev"
