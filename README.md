@@ -19,5 +19,7 @@
   <a href="https://sequelize.org/">
     <img src="https://img.shields.io/badge/-Sequelize-05122A?style=flat&logo=sequelize" />
   </a>
-  
+  <a href="https://www.postgresql.org/">
+    <img src="https://img.shields.io/badge/-PostgreSQL-05122A?style=flat&logo=postgresql" />
+  </a>
 </div>
