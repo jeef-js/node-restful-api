@@ -24,12 +24,13 @@ module.exports = {
   async index (req, res) {
     // List all users
     try {
-      const users = await User.findAll()
-
-      users.map(user => {
-        // Remove the password from the user object.
-        user.password = undefined
-        return user
+      const users = await User.findAll({
+        attributes: {
+          exclude: ['password']
+        },
+        order: [
+          ['id', 'ASC']
+        ]
       })
 
       return res.json(users)
@@ -40,7 +41,11 @@ module.exports = {
 
   async show (req, res) { // Show a specific user
     try {
-      const user = await User.findByPk(req.params.id)
+      const user = await User.findByPk(req.params.id, {
+        attributes: {
+          exclude: ['password']
+        }
+      })
 
       return res.json(user)
     } catch (error) {

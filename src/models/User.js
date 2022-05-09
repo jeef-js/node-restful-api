@@ -17,7 +17,6 @@ class User extends Model {
       hooks: {
         beforeSave: (user, options) => {
           // Hash the password before saving the user.
-
           const passwordHash = bcrypt.hashSync(user.password, 10)
           user.password = passwordHash
         }
