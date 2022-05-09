@@ -5,7 +5,7 @@
 </div>
 
 ##
-[![Github](https://img.shields.io/badge/-GitHub-05122A?style=flat&logo=github)](google.com)
+[![Github](https://img.shields.io/badge/-GitHub-05122A?style=flat&logo=github)](https://github.com/Jeef-js)
 
 <img src="https://raw.githubusercontent.com/gist/Jeef-js/db6bb605f7fb47e37f7cbbc1a7e7e5e5/raw/466ddeb5281c5092da4a45b8cd07df654dab88d8/apicard.svg" width="100%" />
 
