@@ -31,5 +31,5 @@
 ---
 
 <p>
-  Click <a href="./docs">here</a> to acess the complete API documentation
+  Click <a href="./docs">here</a> to acess the complete API documentation (Documentation not avaliable yet)
 </p>
