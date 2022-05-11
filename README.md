@@ -30,4 +30,6 @@
 
 ---
 
-<a href="./docs">Documentation</a>
+<p>
+  Click <a href="./docs">here</a> to acess the complete API documentation
+</p>
