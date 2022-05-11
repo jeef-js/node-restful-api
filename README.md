@@ -30,3 +30,4 @@
 
 ---
 
+<a href="./docs">Documentation</a>
