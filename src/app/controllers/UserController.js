@@ -1,7 +1,8 @@
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const authConfig = require('../config/authConfig')
+const authConfig = require('../../config/authConfig')
+const crypto = require('crypto')
 
 module.exports = {
   async store (req, res) {
@@ -14,6 +15,8 @@ module.exports = {
         email,
         password
       })
+
+      user.password = undefined
 
       return res.json(user)
     } catch (error) {
@@ -121,7 +124,8 @@ module.exports = {
         token
       })
     } catch (error) {
-      return res.json({ message: 'Error on login' })
+      console.log(error)
+      return res.status(500).json({ message: 'Error on login' })
     }
   },
 
@@ -143,6 +147,36 @@ module.exports = {
       })
 
       return res.json(user)
+    } catch (error) {
+      return res.status(500).json({ error: error.message })
+    }
+  },
+
+  async resetPassword (req, res) {
+    const { email } = req.body
+
+    try {
+      const user = await User.findOne({
+        where: {
+          email
+        }
+      })
+
+      if (!user) {
+        return res.status(400).json({ message: 'User not found' })
+      }
+
+      const token = crypto.randomBytes(20).toString('hex')
+
+      const now = new Date()
+      now.setHours(now.getHours() + 1)
+
+      user.update({
+        passwordResetToken: token,
+        passwordResetExpires: now
+      })
+
+      return res.json({ message: 'Check your email', token, now })
     } catch (error) {
       return res.status(500).json({ error: error.message })
     }

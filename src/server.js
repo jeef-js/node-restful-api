@@ -1,8 +1,8 @@
 const express = require('express')
 const morgan = require('morgan')
 
-const userRoutes = require('./routes/userRoutes')
-const authRoutes = require('./routes/authRoutes')
+const userRoutes = require('./app/routes/userRoutes')
+const authRoutes = require('./app/routes/authRoutes')
 
 require('./database') // Initialize the database
 

@@ -1,3 +1,6 @@
+require('dotenv/config')
+
 module.exports = {
-  secret: '4dab19db799e70f1123a1f94ac3c45fb'
+  secret: process.env.JWT_SECRET // The secret key is a environment variable.
+  // If you don't have one, you can create in your .env file.
 }
