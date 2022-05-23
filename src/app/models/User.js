@@ -11,7 +11,15 @@ class User extends Model {
         type: DataTypes.STRING,
         field: 'password_hash'
       },
-      verified: DataTypes.BOOLEAN
+      verified: DataTypes.BOOLEAN,
+      resetPasswordToken: {
+        type: DataTypes.STRING,
+        field: 'reset_password_token'
+      },
+      resetPasswordExpires: {
+        type: DataTypes.DATE,
+        field: 'reset_password_expires'
+      }
       // The fields id, createdAt and updatedAt are automatically created by sequelize.
     }, {
       hooks: {

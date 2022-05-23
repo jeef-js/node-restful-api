@@ -14,12 +14,15 @@ const transport = nodemailer.createTransport({
 })
 
 transport.use('compile', hbs({
-  viewEngine: 'handlebars',
+  viewEngine: {
+    defaultLayout: undefined,
+    partialsDir: path.resolve('./src/resources/mail/')
+  },
   viewPath: path.resolve('./src/resources/mail'),
   extName: '.html'
 }))
 
-// SMTP protocol is not recommended for production. Use Mailgun, Sendgrid or other instead.
+// SMTP protocol is not recommended for production. Use Mailgun, Sendgrid or other instead. Recomended: Amazon SES
 // In this case we are using mailtrap.io as a fake mail server.
 
 module.exports = transport

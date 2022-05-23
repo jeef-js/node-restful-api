@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const authConfig = require('../../config/authConfig')
 const crypto = require('crypto')
+const mailer = require('../../modules/mailer')
 
 module.exports = {
   async store (req, res) {
@@ -152,7 +153,7 @@ module.exports = {
     }
   },
 
-  async resetPassword (req, res) {
+  async forgotPassword (req, res) {
     const { email } = req.body
 
     try {
@@ -172,13 +173,61 @@ module.exports = {
       now.setHours(now.getHours() + 1)
 
       user.update({
-        passwordResetToken: token,
-        passwordResetExpires: now
+        resetPasswordToken: token,
+        resetPasswordExpires: now
       })
 
-      return res.json({ message: 'Check your email', token, now })
+      mailer.sendMail({
+        to: email,
+        from: 'restful-api@support.com',
+        subject: 'Password recovery',
+        template: 'forgot-password',
+        context: { token }
+      }, (error) => {
+        if (error) {
+          return res.status(400).json({ message: 'Cannot send forgot password email' })
+        }
+
+        return res.status(200).json({ message: 'Check your email inbox' })
+      })
     } catch (error) {
       return res.status(500).json({ error: error.message })
+    }
+  },
+
+  async resetPassword (req, res) {
+    const { email, token, password } = req.body
+
+    try {
+      const user = await User.findOne({
+        where: {
+          email
+        }
+      })
+
+      if (!user) {
+        return res.status(400).json({ message: 'User not found' })
+      }
+
+      if (token !== user.resetPasswordToken) {
+        return res.status(400).json({ message: 'Token invalid' })
+      }
+
+      const now = new Date()
+
+      if (now > user.resetPasswordExpires) {
+        return res.status(400).json({ message: 'Token expired' })
+      }
+
+      user.update({
+        password,
+        resetPasswordToken: null,
+        resetPasswordExpires: null
+      })
+
+      return res.status(200).json({ message: 'Password updated' })
+    } catch (error) {
+      return res.status(400).json({ error: error.message })
     }
   }
 }

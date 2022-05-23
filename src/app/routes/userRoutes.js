@@ -5,6 +5,8 @@ const router = express.Router()
 
 router.post('/register', UserController.store)
 router.post('/login', UserController.login)
+router.post('/forgot', UserController.forgotPassword)
+router.post('/reset', UserController.resetPassword)
 
 router.get('/', UserController.index)
 router.get('/:id', UserController.show)
