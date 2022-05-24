@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 const authConfig = require('../../config/authConfig')
 const crypto = require('crypto')
 const mailer = require('../../modules/mailer')
+const path = require('path')
 
 module.exports = {
   async store (req, res) {
@@ -17,9 +18,27 @@ module.exports = {
         password
       })
 
-      user.password = undefined
+      mailer.sendMail({
+        to: email,
+        from: 'restful-api@support.com',
+        subject: 'Account activation',
+        template: 'account-activation',
+        context: {
+          token: user.activateToken
+        },
+        attachments: [{
+          filename: 'api-logo.svg',
+          path: path.resolve(__dirname, '..', '..', 'resources', 'mail', 'images', 'api-logo.svg'),
+          cid: 'api-logo'
+        }]
+      }, (error) => {
+        if (error) {
+          console.log(error)
+          return res.status(400).json({ message: 'Cannot send activate email' })
+        }
 
-      return res.json(user)
+        return res.status(200).json({ message: 'Check your email inbox to activate your account' })
+      })
     } catch (error) {
       return res.status(500).json({ error: error.message })
     }
@@ -37,6 +56,7 @@ module.exports = {
         ]
       })
 
+      console.log(__dirname)
       return res.json(users)
     } catch (error) {
       return res.status(500).json({ error: error.message })
@@ -86,8 +106,8 @@ module.exports = {
     return res.json({ message: 'User deleted' })
   },
 
-  async login (req, res) {
-    // Login a specific user
+  async signin (req, res) {
+    // Sign in a user
     const { email, password } = req.body
 
     if (!email || !password) {
@@ -105,8 +125,8 @@ module.exports = {
         return res.status(400).json({ message: 'User not found' })
       }
 
-      if (!user.verified) {
-        return res.status(400).send({ message: 'Please verify your email address before logging in' })
+      if (user.status === 'pending') {
+        return res.status(400).send({ message: 'Please verify your email inbox' })
         // Send a message to the user that he needs to verify his email address
       }
 
@@ -133,21 +153,26 @@ module.exports = {
   async verify (req, res) {
     // Verifies the email address of a specific user
     try {
-      const user = await User.findByPk(req.params.id)
+      const user = await User.findOne({
+        where: {
+          activateToken: req.params.token
+        }
+      })
 
       if (!user) {
         return res.json({ message: 'User not found' })
       }
 
       user.update({
-        verified: true
+        status: 'active',
+        activateToken: null
       }, {
-        fields: ['verified']
+        fields: ['status', 'activateToken']
         // Only update the specified field
         // This option fix the problem of the password being rehashed when the user verifies his email address
       })
 
-      return res.json(user)
+      return res.status(200).json({ message: 'User activated sucessfuly' })
     } catch (error) {
       return res.status(500).json({ error: error.message })
     }
