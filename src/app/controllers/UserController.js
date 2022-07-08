@@ -9,6 +9,7 @@ const path = require('path')
 module.exports = {
   async store (req, res) {
     // Create a new user
+    console.log(req.body)
     const { name, email, password } = req.body
 
     try {
@@ -40,6 +41,7 @@ module.exports = {
         return res.status(200).json({ message: 'Check your email inbox to activate your account' })
       })
     } catch (error) {
+      console.log(error)
       return res.status(500).json({ error: error.message })
     }
   },
